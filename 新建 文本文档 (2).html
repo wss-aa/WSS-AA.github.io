@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>温馨弹窗（黑底慢弹出版）</title>
+    <style>
+        /* 页面整体样式：黑底 + 消除默认边距 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* 黑色背景 */
+            min-height: 100vh;
+        }
+
+        /* 弹窗样式 */
+        .popup {
+            position: fixed;
+            width: 220px;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "微软雅黑", sans-serif;
+            font-size: 14px;
+            box-shadow: 0 2px 12px rgba(255,255,255,0.15); /* 白色阴影更适配黑底 */
+            z-index: 9999;
+            transition: all 0.3s ease;
+            padding: 0 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 柔和低饱和颜色列表（与原Python一致，在黑底上更显清新）
+        const SOFT_COLORS = [
+            '#f8d7da', '#f5e8c8', '#d1ecf1', '#e3f2fd', '#f3e5f5',
+            '#e8f5e9', '#fff3e0', '#f1f8e9', '#ede7f6', '#e0f7fa',
+            '#fff8e1', '#fce4ec', '#e8eaf6', '#f5f5f5', '#e0f2f1',
+            '#ffebee', '#fafafa', '#e3f9e5', '#dcf8c6', '#c8e6c9',
+            '#b2ebf2', '#bbdefb', '#c5cae9', '#d1c4e9', '#f8bbd0'
+        ];
+
+        // 温馨提示语列表（与原Python一致）
+        const MESSAGES = [
+            '保持好心情', '多喝温水', '顺顺利利', '保持微笑呀',
+            '梦想成真', '好好爱自己', '愿所有烦恼都消失', '早点休息',
+            '每天都要元气满满', '期待下一次见面', '记得吃水果',
+            '今天也要开心呀', '我想你了', '一切都会变好的',
+            '别太累啦', '给自己放个小假', '平安喜乐', '万事胜意'
+        ];
+
+        // 文字颜色列表（优化适配黑底，更清晰易读）
+        const TEXT_COLORS = [
+            '#5d4037', '#4e342e', '#3e2723', '#263238', '#2e3c43',
+            '#1b5e20', '#388e3c', '#0277bd', '#303f9f', '#7b1fa2'
+        ];
+
+        // 弹窗弹出间隔时间（单位：毫秒），数值越大弹出越慢
+        const intervalTime = 100; // 可调整：200=0.2秒/个，500=0.5秒/个，1000=1秒/个
+
+        // 创建单个弹窗
+        function createPopup() {
+            // 创建弹窗元素
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+
+            // 随机选择颜色、文字
+            const bgColor = SOFT_COLORS[Math.floor(Math.random() * SOFT_COLORS.length)];
+            const textColor = TEXT_COLORS[Math.floor(Math.random() * TEXT_COLORS.length)];
+            const message = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+
+            // 设置样式和内容
+            popup.style.backgroundColor = bgColor;
+            popup.style.color = textColor;
+            popup.textContent = message;
+
+            // 随机位置（基于屏幕尺寸，避免弹窗超出屏幕）
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const x = Math.floor(Math.random() * (screenWidth - 220));
+            const y = Math.floor(Math.random() * (screenHeight - 100));
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+
+            // 添加到页面
+            document.body.appendChild(popup);
+        }
+
+        // 批量创建200个弹窗（按设定的间隔时间逐个弹出）
+        let count = 0;
+        const interval = setInterval(() => {
+            createPopup();
+            count++;
+            // 当创建完200个弹窗后，停止定时器
+            if (count >= 200) {
+                clearInterval(interval);
+            }
+        }, intervalTime);
+    </script>
+</body>
+</html>
